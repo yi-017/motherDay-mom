@@ -1,0 +1,3088 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>來看角秀卿的貼文</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    body {
+      justify-content: flex-start;
+      align-items: center;
+      padding: 0;
+    }
+
+    .page-inner {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ── 開場 ── */
+    .intro {
+      min-height: 100dvh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 3rem 2.5rem;
+      gap: 1.1rem;
+      position: relative;
+    }
+
+    .intro-label {
+      font-size: 0.58rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      animation: fadeUp 0.8s var(--ease-out) 0.2s both;
+    }
+
+    .intro-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.2rem, 10vw, 3rem);
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.2;
+      color: var(--text-main);
+      animation: fadeUp 0.8s var(--ease-out) 0.35s both;
+    }
+
+    .intro-sub {
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      line-height: 2;
+      max-width: 220px;
+      animation: fadeUp 0.8s var(--ease-out) 0.5s both;
+    }
+
+    .intro-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      animation: fadeUp 0.8s var(--ease-out) 1.1s both;
+    }
+
+    .intro-scroll-line {
+      width: 1px;
+      height: 36px;
+      background: linear-gradient(to bottom, var(--border), transparent);
+      animation: scrollPulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; }
+      50%       { opacity: 0.8; }
+    }
+
+    .intro-scroll-text {
+      font-size: 0.52rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    /* ── Feed ── */
+    .feed {
+      width: 100%;
+      padding: 1rem 0 6rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── 單篇貼文 ── */
+    .post {
+      width: 100%;
+      padding: 2.2rem 1.8rem;
+      border-bottom: 1px solid #161412;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.75s var(--ease-out), transform 0.75s var(--ease-out);
+    }
+
+    .post.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── 貼文頂部 ── */
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .post-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #1a1715;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+    }
+
+    .post-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .post-meta { flex: 1; }
+
+    .post-name {
+      font-size: 0.8rem;
+      color: var(--text-main);
+      letter-spacing: 0.02em;
+    }
+
+    .post-time {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      margin-top: 0.1rem;
+    }
+
+    .post-era {
+      font-size: 0.5rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.5rem;
+    }
+
+    /* ── 文字 ── */
+    .post-text {
+      font-size: 0.88rem;
+      color: var(--text-mid);
+      line-height: 1.85;
+      letter-spacing: 0.02em;
+    }
+
+/* ── 照片 ── */
+.post-photos {
+  width: calc(100% + 3.6rem);
+  margin-left: -1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.post-photos.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+
+.photo-item {
+  width: 100%;
+  overflow: hidden;
+  background: #121010;
+}
+
+/* 移除固定比例 */
+.photo-item.portrait,
+.photo-item.wide {
+  aspect-ratio: auto;
+}
+
+.photo-item img {
+  width: 100%;
+  height: auto;          /* 自動高度 */
+  display: block;
+  object-fit: contain;
+  filter: none;
+  transition: 0.3s;
+}
+
+.photo-item:hover img {
+  filter: none;
+}
+
+.photo-item.vintage img {
+  filter: none;
+}
+
+    /* ── 按讚區 ── */
+    .post-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.5rem;
+      border-top: 1px solid #5c5651;
+    }
+
+    .like-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .like-heart {
+      font-size: 0.85rem;
+      color: #bebbb7;
+      transition: color 0.2s, transform 0.2s var(--ease-out);
+      display: inline-block;
+    }
+
+    .like-btn.liked .like-heart {
+      color: #a05050;
+      animation: heartPop 0.3s var(--ease-out) both;
+    }
+
+    @keyframes heartPop {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.5); }
+      100% { transform: scale(1); }
+    }
+
+    .like-count {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      transition: color 0.2s;
+    }
+
+    .like-btn.liked .like-count { color: #b4a4a4; }
+
+    .comment-btn {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      transition: color 0.2s;
+    }
+
+    .comment-btn:hover { color: var(--text-mid); }
+
+    /* ── 留言 ── */
+    .comments {
+      display: grid;
+      grid-template-rows: 0fr;
+      transition: grid-template-rows 0.4s var(--ease-out);
+    }
+
+    .comments.open { grid-template-rows: 1fr; }
+
+    .comments-inner { overflow: hidden; }
+
+    .comments-list {
+      padding-top: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .comment {
+      display: flex;
+      gap: 0.6rem;
+      align-items: flex-start;
+    }
+
+    .comment-avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: #5e544d;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.52rem;
+      color: var(--text-dim);
+      overflow: hidden;
+    }
+
+    .comment-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .comment-body {
+      flex: 1;
+      background: #111009;
+      border: 1px solid #1a1815;
+      padding: 0.5rem 0.7rem;
+      border-radius: 2px 8px 8px 8px;
+    }
+
+    .comment-name {
+      font-size: 0.58rem;
+      color: var(--text-dim);
+      letter-spacing: 0.06em;
+      margin-bottom: 0.2rem;
+    }
+
+    .comment-text {
+      font-size: 0.78rem;
+      color: #b0aba8;
+      line-height: 1.65;
+    }
+
+    .comments-list:empty::after {
+     content: '暫無留言';
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    padding: 0.5rem 0;
+    display: block;
+  }
+
+    /* ── 未來回憶 ── */
+    .future-section {
+      width: 100%;
+      padding: 2.5rem 1.8rem 0;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.9s var(--ease-out), transform 0.9s var(--ease-out);
+    }
+
+    .future-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .future-post {
+      width: 100%;
+      border: 1px dashed #1e1c18;
+      padding: 2.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      text-align: center;
+    }
+
+    .future-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      animation: breathe 3.5s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 0.2; }
+      50%       { opacity: 0.6; }
+    }
+
+    .future-text {
+      font-family: var(--font-display);
+      font-size: clamp(0.88rem, 4vw, 1.05rem);
+      font-style: italic;
+      color: var(--text-dim);
+      line-height: 1.9;
+    }
+
+    .future-date {
+      font-size: 0.54rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #252220;
+    }
+
+    /* ── 結尾 ── */
+    .ending {
+      padding: 4rem 2rem 2rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.1rem;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 1s var(--ease-out), transform 1s var(--ease-out);
+    }
+
+    .ending.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .ending-line {
+      width: 1px;
+      height: 44px;
+      background: linear-gradient(to bottom, var(--border), transparent);
+    }
+
+    .ending-text {
+      font-family: var(--font-display);
+      font-size: clamp(1.1rem, 5.5vw, 1.5rem);
+      font-style: italic;
+      color: var(--text-main);
+      line-height: 1.7;
+    }
+
+    .ending-sub {
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .future-memory-text {
+      font-family: var(--font-display);
+      font-size: clamp(0.9rem, 4vw, 1.1rem);
+      font-style: italic;
+      color: var(--text-dim);
+      line-height: 1.9;
+      letter-spacing: 0.02em;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-inner">
+
+    <!-- 開場 -->
+    <div class="intro">
+      <p class="intro-label">Mother's Day · 2026</p>
+      <h1 class="intro-title">來看<br>角秀卿</h1>
+      <p class="intro-sub">這邊會有好多角秀卿 喔喔喔</p>
+      <div class="intro-scroll">
+        <div class="intro-scroll-line"></div>
+        <span class="intro-scroll-text">start</span>
+      </div>
+    </div>
+
+    <!-- Feed -->
+    <div class="feed">
+
+      <!-- 貼文 1 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2011年7月12日</p>
+          </div>
+        </div>
+        <p class="post-text">新增了 35 張相片</p>
+        <div class="post-photos">
+          <div class="photo-item portrait vintage">
+            <img src="assets/fb1.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/1.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">3 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">SC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sherry Chiao</p>
+                  <p class="comment-text">沒良心啦 竟然自已去啦！！</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">不然你要改姓林哦。車子大爆滿了~~還有去會撞鞋哦</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">SC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sherry Chiao</p>
+                  <p class="comment-text">幹嘛改姓林 妳也不姓林 哈哈哈 撞鞋哦 真的見了</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">你有看到鞋哦~~我不姓林啊。所以是少數民族~~</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">RY</div>
+                <div class="comment-body">
+                  <p class="comment-name">Rita Yen</p>
+                  <p class="comment-text">生活好愜意丫...</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">平常只看到3個人。只有假日才可以看到很多人~~什麼時候要跟李，一起出遊啊~~</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 2 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2011年11月28日</p>
+          </div>
+        </div>
+        <p class="post-text">玩~~其實是一件很累的事~~累死人了</p>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">5 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">歐</div>
+                <div class="comment-body">
+                  <p class="comment-name">歐兜邁</p>
+                  <p class="comment-text">會嗎</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">會啊。比上班還累`~~</p>
+                </div>
+              </div>
+                            <div class="comment">
+                <div class="comment-avatar">SC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sherry Chiao</p>
+                  <p class="comment-text">你這麼久沒上班 ~~ 還記得丫！！</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">我每天都在上班啊~~</p>
+                </div>
+              </div>
+                            <div class="comment">
+                <div class="comment-avatar">MY</div>
+                <div class="comment-body">
+                  <p class="comment-name">Mi Yi</p>
+                  <p class="comment-text">褓母兼清埽人員阿!!~</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">宜~~你粉厲害哦</p>
+                </div>
+              </div>
+                            <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">等我po上照片，你就知道啦~~先賣一下關子吧~~</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 3 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2011年11月29日</p>
+          </div>
+        </div>
+        <p class="post-text">新增了 22 張相片。</p>
+        <div class="post-photos">
+          <div class="photo-item wide">
+            <img src="assets/fb2.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/4.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">9 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">RY</div>
+                <div class="comment-body">
+                  <p class="comment-name">Rita Yen</p>
+                  <p class="comment-text">幸福哦~~</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">對呵~~祝大家都幸福~~</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 4 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2011年12月23日</p>
+          </div>
+        </div>
+        <p class="post-text">2011/12/22冬至~南瓜粥+紅豆芝麻湯圓~</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb3.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">5 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">SC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sherry Chiao</p>
+                  <p class="comment-text">我有感受到叫囂！！</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">歐</div>
+                <div class="comment-body">
+                  <p class="comment-name">歐兜邁</p>
+                  <p class="comment-text">南瓜還沒去皮</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">都是我煮的~~很好吃~</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">角先生：南瓜不用去皮~~</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 5 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2011年12月23日</p>
+          </div>
+        </div>
+        <p class="post-text">天啊~錯啦~~ 請幫我找找哪錯啦~~</p>
+        <div class="post-photos">
+          <div class="photo-item portrait">
+            <img src="assets/fb4.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/6.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">3 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">有五個地方錯啦。你找得出來嗎</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">SC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sherry Chiao</p>
+                  <p class="comment-text">帽子、頭髮 、鞋子、圍巾、跟手上那個什麼碗糕！對嗎？？</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">答對了~~不過你要說那是什麼東西變的</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">SC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sherry Chiao</p>
+                  <p class="comment-text">就盒子變帽子！襪子變頭髮！鞋子變手機！尿布變圍巾！手上那個不曉得什麼鬼應該是變手鍊吧！</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">100分~~好學生。那是腰帶</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 6 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2012年1月19日</p>
+          </div>
+        </div>
+        <p class="post-text">給自己的新年禮物~馬靴到貨了~~</p>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">9 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">MY</div>
+                <div class="comment-body">
+                  <p class="comment-name">Mi Yi</p>
+                  <p class="comment-text">這麼快 好穿嗎</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">很像沒穿鞋一樣。還真不習慣~穿了覺得腳變大了。不過真滿好穿的~~</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+            <!-- 貼文 7 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2012年2月14日</p>
+          </div>
+        </div>
+        <p class="post-text">要來去原燒慶祝情人節了~~</p>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">9 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">SL</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sindy Li</p>
+                  <p class="comment-text">幸福餒~~</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">你也很幸福~~</p>
+                </div>
+              </div>
+                            <div class="comment">
+                <div class="comment-avatar">MY</div>
+                <div class="comment-body">
+                  <p class="comment-name">Mi Yi</p>
+                  <p class="comment-text">你還有情人節哦!</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">當然要啊~~</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 8 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2012年3月23日</p>
+          </div>
+        </div>
+        <p class="post-text">剛剛敗的香精油~~希望家裏香噴噴~~</p>
+        <div class="post-photos">
+          <div class="photo-item wide">
+            <img src="assets/fb5.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/4.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">7 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">SC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sherry Chiao</p>
+                  <p class="comment-text">真的很愛亂買a</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">哈~~最近想來改造一下家裏的fu。買一些小東西好像可以加分耶~~</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+            <!-- 貼文 9 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2012年8月1日</p>
+          </div>
+        </div>
+        <p class="post-text">兩個孩子都上學後，生活過得更自由自在又愜意~~哈(竊笑中)</p>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">24 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">歐</div>
+                <div class="comment-body">
+                  <p class="comment-name">歐兜邁</p>
+                  <p class="comment-text">那你可以抓."蝨子"相咬</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">老大，可惜沒長頭蝨耶。等你長了。我在幫你抓</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">惠芳~你有空再約我。不過可能會有個老跟班</p>
+                </div>
+              </div>
+            <div class="comment">
+                <div class="comment-avatar">SC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sherry Chiao</p>
+                  <p class="comment-text">再2個星期應該要開始無聊了！！</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 10 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2012年8月8日</p>
+          </div>
+        </div>
+        <p class="post-text">101鼎泰豐之午餐約會</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb6.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">7 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 5 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2012年8月8日</p>
+          </div>
+        </div>
+        <p class="post-text">今年早到的情人節禮物！</p>
+        <div class="post-photos">
+          <div class="photo-item portrait">
+            <img src="assets/fb7.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/6.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">35 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">何</div>
+                <div class="comment-body">
+                  <p class="comment-name">何欣誼Sherry Chiao</p>
+                  <p class="comment-text">是七夕嗎</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">對啊!好像早了點</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">SL</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sindy Li</p>
+                  <p class="comment-text">哇~好閃的情人節禮物丫!!幸福ㄛ</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 3 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2012年8月13日</p>
+          </div>
+        </div>
+        <p class="post-text">北投星月旋轉餐廳</p>
+        <div class="post-photos">
+          <div class="photo-item wide">
+            <img src="assets/fb8.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/4.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">9 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 4 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2012年8月23日</p>
+          </div>
+        </div>
+        <p class="post-text">我在石門水庫~哇哈哈</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb9.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">21 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">JW</div>
+                <div class="comment-body">
+                  <p class="comment-name">Joewin Wu</p>
+                  <p class="comment-text">去看洩洪了嗎？要小心安全哦！</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">李</div>
+                <div class="comment-body">
+                  <p class="comment-name">李春慧</p>
+                  <p class="comment-text">不用顧小孩粉悠哉歐~~颱風天還跑去玩~</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">今天這邊的天氣非常的好~~</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 5 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2012年10月29日</p>
+          </div>
+        </div>
+        <p class="post-text">數字油畫DIY到貨了~~開始要來當個SUPER畫家了~~哈</p>
+        <div class="post-photos">
+          <div class="photo-item portrait">
+            <img src="assets/fb10.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/6.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">24 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">徐</div>
+                <div class="comment-body">
+                  <p class="comment-name">徐子陵</p>
+                  <p class="comment-text">有夢最美</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">SC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sherry Chiao</p>
+                  <p class="comment-text">真的很閒！下次拿一個給我！</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">要的話~~請上網團購~~哈。我很缺跟我團購的人~~</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 5 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2012年11月14日</p>
+          </div>
+        </div>
+        <p class="post-text">更新了她的大頭貼照。</p>
+        <div class="post-photos">
+          <div class="photo-item portrait">
+            <img src="assets/fb11.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/6.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">20 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">李</div>
+                <div class="comment-body">
+                  <p class="comment-name">李春慧</p>
+                  <p class="comment-text">同學妳幹嘛改名字~~害我差點以為林以喬是水??</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">哎~~~~說來話長。就是下次手不要那麼賤。不要亂改。現在改不回來了</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 6 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2012年11月14日</p>
+          </div>
+        </div>
+        <p class="post-text">有誰知道 ~~fb的名字要如何改回來~~還是真的只有改一次的機會~。</p>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">8 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">歐兜邁你還敢給我按讚。都是你這個害人精</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">SC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sherry Chiao</p>
+                  <p class="comment-text">你到底在想什麼！哈</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">所以沒救了是嗎</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">歐兜邁你給我負責改回來</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 8 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2012年11月23日</p>
+          </div>
+        </div>
+        <p class="post-text">午餐約會之桃園＂富貴庭園＂。等會還有現場演奏可聽哦!嘻~</p>
+        <div class="post-photos">
+          <div class="photo-item wide">
+            <img src="assets/fb12.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/4.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">26 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">曾</div>
+                <div class="comment-body">
+                  <p class="comment-name">曾小妤</p>
+                  <p class="comment-text">哇...還去約會..幸福ㄛ</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">SC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sherry Chiao</p>
+                  <p class="comment-text">麥閣甲！！</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">怕我變太瘦了!現場有人唱歌哦!粉不錯滴</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">歐</div>
+                <div class="comment-body">
+                  <p class="comment-name">歐兜邁</p>
+                  <p class="comment-text">哈~~你不會瘦的拉 放心</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 10 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">施</div>
+          <div class="post-meta">
+            <p class="post-name">施佳慧</p>
+            <p class="post-time">2012年12月11日</p>
+          </div>
+        </div>
+        <p class="post-text">原來你33歲了xd</p>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">0 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">不然你以為43哦</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">施</div>
+                <div class="comment-body">
+                  <p class="comment-name">施佳慧</p>
+                  <p class="comment-text">我以為你才20幾快30而已 呵呵XD 拜託!!這是讚美你很年輕好嗎!*0*</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">是哦。下次請你吃 糖~~</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">施</div>
+                <div class="comment-body">
+                  <p class="comment-name">施佳慧</p>
+                  <p class="comment-text">我要吃品客洋芋片 (蜂蜜芥末醬口味的)^^</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">是哦。有這種口味啊。下次有看到，再買給你囉~~哈</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">施</div>
+                <div class="comment-body">
+                  <p class="comment-name">施佳慧</p>
+                  <p class="comment-text">拜託~~超好吃的 那就謝謝舅媽囉:"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+            <!-- 貼文 9 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2012年12月31日</p>
+          </div>
+        </div>
+        <p class="post-text">南庄老街go~go</p>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">21 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">游</div>
+                <div class="comment-body">
+                  <p class="comment-name">游麗玲</p>
+                  <p class="comment-text">有沒有去吃桂花冰鎮湯圓,超美味的!!</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">吃了!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 10 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2013年1月4日</p>
+          </div>
+        </div>
+        <p class="post-text">第二幅數字油畫，完工囉~~</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb13.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">35 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">游</div>
+                <div class="comment-body">
+                  <p class="comment-name">游麗玲</p>
+                  <p class="comment-text">你畫的??</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">是的~我畫的，不過這是一個只要有手跟會看數字人都會畫~~</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 5 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2013年1月6日</p>
+          </div>
+        </div>
+        <p class="post-text">天氣好好!往太平山出發囉!</p>
+        <div class="post-photos">
+          <div class="photo-item portrait">
+            <img src="assets/fb14.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/6.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">14 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 5 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2013年1月11日</p>
+          </div>
+        </div>
+        <p class="post-text">征服了象山步道!看到了最美的101。</p>
+        <div class="post-photos">
+          <div class="photo-item portrait">
+            <img src="assets/fb15.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/6.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">32 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">徐</div>
+                <div class="comment-body">
+                  <p class="comment-name">徐子陵</p>
+                  <p class="comment-text">厲害…隔天要鐵腿了</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 8 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2013年3月20日</p>
+          </div>
+        </div>
+        <p class="post-text">爸比今日作品~有Q嗎?</p>
+        <div class="post-photos">
+          <div class="photo-item wide">
+            <img src="assets/fb16.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/4.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">36 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">徐</div>
+                <div class="comment-body">
+                  <p class="comment-name">徐子陵</p>
+                  <p class="comment-text">是他作的喔...這麼強</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">對啊。自己做的哦！</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">王</div>
+                <div class="comment-body">
+                  <p class="comment-name">王芳量</p>
+                  <p class="comment-text">兼職汽球達人嗎</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">這個提議不錯哦。可以考慮去大溪橋兼職~~記得來捧場哦</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 10 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2013年5月29日</p>
+          </div>
+        </div>
+        <p class="post-text">今晩入住的森林小木屋。謝謝大家的祝福~也祝大家天天黑皮</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb17.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">50 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">嘉</div>
+                <div class="comment-body">
+                  <p class="comment-name">嘉芬</p>
+                  <p class="comment-text">很有fu唷……^^</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 貼文 11 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2013年6月5日</p>
+          </div>
+        </div>
+        <p class="post-text">更新了她的大頭貼照</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb18.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">43 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list"></div>
+          </div>
+        </div>
+      </div>
+<!-- 貼文 12 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2013年11月23日</p>
+          </div>
+        </div>
+        <p class="post-text">7年了。。。。。。</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb19.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">45 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">嘉</div>
+                <div class="comment-body">
+                  <p class="comment-name">嘉芬</p>
+                  <p class="comment-text">幸福的一家人</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">HHH</div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsuan Hsuan Huang</p>
+                  <p class="comment-text">跟我們一樣耶(　^ω^)七年之痒，更沒想到還同月份呢</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">11/25！你咧？？</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">陳</div>
+                <div class="comment-body">
+                  <p class="comment-name">陳奕蓁</p>
+                  <p class="comment-text">我也是11月耶，11/1不過我13年了……</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 貼文 13 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2014年3月29日</p>
+          </div>
+        </div>
+        <p class="post-text">這樣的早餐店會不會太優了!大人可以悠閒的享受美味的早餐。。*^0^*</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb20.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">29 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">RY</div>
+                <div class="comment-body">
+                  <p class="comment-name">Rita Yen</p>
+                  <p class="comment-text">這是你家?</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">早餐店</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">MY</div>
+                <div class="comment-body">
+                  <p class="comment-name">Mi Yi</p>
+                  <p class="comment-text">在那兒？！</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">義勇街</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">MY</div>
+                <div class="comment-body">
+                  <p class="comment-name">Mi Yi</p>
+                  <p class="comment-text">什麼！！ 這麼近！！ 該不會之後假日都要去。XD</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- 貼文 15 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2014年7月27日</p>
+          </div>
+        </div>
+        <p class="post-text">玩水烤肉趣。。。</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb21.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">39 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">SC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sherry Chiao</p>
+                  <p class="comment-text">林小姐這張也太強了吧！</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">快來吃</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">曾</div>
+                <div class="comment-body">
+                  <p class="comment-name">曾小妤</p>
+                  <p class="comment-text">外送過來</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">RY</div>
+                <div class="comment-body">
+                  <p class="comment-name">Rita Yen</p>
+                  <p class="comment-text">你們活動好多哦~~</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">最近太熱,閉關中。。</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">王</div>
+                <div class="comment-body">
+                  <p class="comment-name">王韻婷</p>
+                  <p class="comment-text">這表情也太特別了吧！</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- 貼文 14 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2014年8月3日</p>
+          </div>
+        </div>
+        <p class="post-text">出發了— 在 Kia Foodie 。</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb22.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">58 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">王</div>
+                <div class="comment-body">
+                  <p class="comment-name">王莉惠</p>
+                  <p class="comment-text">玩的開心喔＼(^o^)／</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">RY</div>
+                <div class="comment-body">
+                  <p class="comment-name">Rita Yen</p>
+                  <p class="comment-text">要去哪?</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">MY</div>
+                <div class="comment-body">
+                  <p class="comment-name">Mi Yi</p>
+                  <p class="comment-text">新馬</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">林</div>
+                <div class="comment-body">
+                  <p class="comment-name">林瑩榛</p>
+                  <p class="comment-text">一路順風，好好玩</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">徐</div>
+                <div class="comment-body">
+                  <p class="comment-name">徐瑟壎</p>
+                  <p class="comment-text">旅途愉快唷~</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">王</div>
+                <div class="comment-body">
+                  <p class="comment-name">王韻婷</p>
+                  <p class="comment-text">旅途愉快喔</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- 貼文 15 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2014年8月10日</p>
+          </div>
+        </div>
+        <p class="post-text">更新了她的大頭貼照。</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb23.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">53 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">陳</div>
+                <div class="comment-body">
+                  <p class="comment-name">陳巧合</p>
+                  <p class="comment-text">這是新加坡環球影城嗎？</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">對阿</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- 貼文 16 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2014年10月23日</p>
+          </div>
+        </div>
+        <p class="post-text">更新了她的大頭貼照。</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb24.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">62 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">陳</div>
+                <div class="comment-body">
+                  <p class="comment-name">陳巧合</p>
+                  <p class="comment-text">在 新加坡拍的嗎？</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">馬來西亞雙子星</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">王</div>
+                <div class="comment-body">
+                  <p class="comment-name">王芳量</p>
+                  <p class="comment-text">這樣不行滴噢,玩的累也要笑一個袂</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">張</div>
+                <div class="comment-body">
+                  <p class="comment-name">張錦秀</p>
+                  <p class="comment-text">雙子星角度超難拍的耶~~</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">張</div>
+                <div class="comment-body">
+                  <p class="comment-name">張淑華</p>
+                  <p class="comment-text">這張全家福每一個人都好看～讚</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">真的嗎！屁股可以打麻將了</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- 貼文 16 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2014年11月25日</p>
+          </div>
+        </div>
+        <p class="post-text">今天我結婚了！哈</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb25.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">44 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">游</div>
+                <div class="comment-body">
+                  <p class="comment-name">游麗玲</p>
+                  <p class="comment-text">今天結婚?那你之前是對人照嗎?</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">忘了說,。。。。。。八年前</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">Sindy Li這是歐巴桑一年的代價。。。</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">HHH</div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsuan Hsuan Huang</p>
+                  <p class="comment-text">結婚8週年快樂</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- 貼文 17 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2014年12月24日</p>
+          </div>
+        </div>
+        <p class="post-text">要來當聖誕老婆婆了！</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb26.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">44 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">MY</div>
+                <div class="comment-body">
+                  <p class="comment-name">Mi Yi</p>
+                  <p class="comment-text">沒...pink&沒...car</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">哈</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">王</div>
+                <div class="comment-body">
+                  <p class="comment-name">王莉惠</p>
+                  <p class="comment-text">哈～我家也需要喔！可以的話順便來我家晃晃耶，聖誕老婆婆＼(^o^)／</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">王莉惠來不及了！明年請預約喔！</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- 貼文 17 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2015年3月23日</p>
+          </div>
+        </div>
+        <p class="post-text">~人生就像茶葉蛋,有裂痕才入味~   其實,生命中的所有挫折與傷痛,都是人生不可或缺的香料。好比煮茶葉蛋,外殼光潔的茶葉蛋看起來賞心悅目,但剝掉外殼,裡面一片慘白,嚐起來毫無味道;表面龜裂的茶葉蛋一點都不漂亮,甚至看起來有點慘,但剝開蛋殼,才知道它色澤美麗,吃起來香醇,讓人回味無窮!       而你的人生希望變成什麼蛋,取決於你自己。</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb27.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">47 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">鍾</div>
+                <div class="comment-body">
+                  <p class="comment-name">鍾良韓</p>
+                  <p class="comment-text">說的太好了</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">張</div>
+                <div class="comment-body">
+                  <p class="comment-name">張怡景</p>
+                  <p class="comment-text">晚安幸福吉祥</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- 貼文 17 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2015年4月15日</p>
+          </div>
+        </div>
+        <p class="post-text">今天是我們家Allen哥的生日~~祝他生日快樂*^O^*</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb28.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">67 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">SC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Sherry Chiao</p>
+                  <p class="comment-text">Allen哥喝香檳喔！</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">魏</div>
+                <div class="comment-body">
+                  <p class="comment-name">魏秀如</p>
+                  <p class="comment-text">生日快樂！</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">曾</div>
+                <div class="comment-body">
+                  <p class="comment-name">曾小妤</p>
+                  <p class="comment-text">Allen哥生日快樂！！</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">Sherry Chiao眼力真好喔</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">MY</div>
+                <div class="comment-body">
+                  <p class="comment-name">Mi Yi</p>
+                  <p class="comment-text">Allen哥 生日快樂󾔑</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">涂</div>
+                <div class="comment-body">
+                  <p class="comment-name">凃佳禎</p>
+                  <p class="comment-text">仕綸生日快樂：</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">徐</div>
+                <div class="comment-body">
+                  <p class="comment-name">徐瑟壎</p>
+                  <p class="comment-text">迪迪~生日快樂哦~ 󾔗 󾔗 󾔗</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">樂</div>
+                <div class="comment-body">
+                  <p class="comment-name">樂樂</p>
+                  <p class="comment-text">小帥哥~~生日快樂！^^</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">林</div>
+                <div class="comment-body">
+                  <p class="comment-name">林美琴</p>
+                  <p class="comment-text">祝弟弟生日快樂。</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">TLY</div>
+                <div class="comment-body">
+                  <p class="comment-name">Tzu Ling Yang</p>
+                  <p class="comment-text">生日快樂</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+<!-- 貼文 17 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2016年7月25日</p>
+          </div>
+        </div>
+        <p class="post-text">更新了她的大頭貼照。</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb29.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">58 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">ML</div>
+                <div class="comment-body">
+                  <p class="comment-name">Mei Lee</p>
+                  <p class="comment-text">Allen哥長大了(^ з^)</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">對啊~沒有白白吃了一年飯。美君老師一樣年輕又美麗喔(^_-)</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">ML</div>
+                <div class="comment-body">
+                  <p class="comment-name">Mei Lee</p>
+                  <p class="comment-text">媽咪嘴巴真甜♡愛妳♡</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">施</div>
+                <div class="comment-body">
+                  <p class="comment-name">施佳慧</p>
+                  <p class="comment-text">唉唷年輕媽媽，很會保養哦󾌫</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">趕快來我家(^_-)舅媽請你吃大餐。。。乖小孩</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">施</div>
+                <div class="comment-body">
+                  <p class="comment-name">施佳慧</p>
+                  <p class="comment-text">已截圖，隨時兌換哈哈</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+<!-- 貼文 17 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2017年10月28日</p>
+          </div>
+        </div>
+        <p class="post-text">請幫忙按個讚～^_^ 點進照片喔<br>
+點進照片 再按讚喔！如果可以分享更讚喔！我想得禮物🎁</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb30.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">24 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">FF</div>
+                <div class="comment-body">
+                  <p class="comment-name">Fang Fang</p>
+                  <p class="comment-text">長這麼高了啊👍🏻👍🏻</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">再過2年就比你我高了⋯⋯啊姨幫忙分享請朋友按讚 有獎品喔</p>
+                </div>
+              </div>
+              <div class="comment">
+                          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">Hsiuching Chiao</p>
+                  <p class="comment-text">是點進照片 再按讚喔！如果可以分享更讚喔！我想得禮物🎁</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<!-- 貼文 10 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2018年4月10日</p>
+          </div>
+        </div>
+        <p class="post-text">廚藝不佳的我～<br>
+          今日晚餐蘆筍粥 搞定<br>
+          我家的蘆筍很粗 但纖維不粗 口感清甜不苦<br>
+          連我們挑食的小人都吃的津津有味～<br>
+          一鍋搞定 健康又省錢^_^<br>
+          蘆筍粗就賺到囉！皮削完 肉還很多 也不用削很多支<br>
+          就可煮一餐 顯示較少</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb31.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">35 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">EC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Emma Chiao</p>
+                  <p class="comment-text">整鍋已掃光囉</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">KH</div>
+                <div class="comment-body">
+                  <p class="comment-name">Kate Huang</p>
+                  <p class="comment-text">我家也秒殺!! 實在痾嘞的好吃</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">謝</div>
+                <div class="comment-body">
+                  <p class="comment-name">謝明順</p>
+                  <p class="comment-text">很清淡..ㄟ</p>
+                </div>
+              </div>
+              <div class="comment">
+                <div class="comment-avatar">EC</div>
+                <div class="comment-body">
+                  <p class="comment-name">Emma Chiao</p>
+                  <p class="comment-text">本人廚藝只有如此而已</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<!-- 貼文 10 -->
+      <div class="post">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/mom-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='她'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">Hsiuching Chiao</p>
+            <p class="post-time">2018年4月10日</p>
+          </div>
+        </div>
+        <p class="post-text">於Tasty西堤牛排 南華店。</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <img src="assets/fb32.png" alt=""
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="photo-ph" style="display:none">
+              <span class="photo-ph-icon">◻</span>
+              <span class="photo-ph-label">assets/mom/5.jpg</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">28 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="comment-avatar">謝</div>
+                <div class="comment-body">
+                  <p class="comment-name">謝明順</p>
+                  <p class="comment-text">太好了</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--
+        ╔══════════════════════════════════════════════════════╗
+        ║              未來回憶 — 部署後上傳說明                    ║
+        ╠══════════════════════════════════════════════════════╣
+        ║  照片拍好後，請依序修改以下四處：                          ║
+        ║                                                      ║
+        ║  1. post-name  → 將「？」改成媽媽的名字                   ║
+        ║  2. post-time  → 將「？」改成日期，例如「2026.05.11」      ║
+        ║  3. post-text  → 將「？」改成當天的描述文字                ║
+        ║  4. 照片       → 將整個 <div class="photo-ph">          ║
+        ║                  換成：                                ║
+        ║                  <img src="assets/mom/today.jpg"      ║
+        ║                       alt="">                         ║
+        ║                  並把照片檔案放入 assets/mom/ 資料夾       ║
+        ╚══════════════════════════════════════════════════════╝
+      -->
+      <div class="post future-section">
+        <div class="post-header">
+          <div class="post-avatar">
+            <img src="assets/me-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='？'">
+          </div>
+          <div class="post-meta">
+            <p class="post-name">林以喬</p>
+            <p class="post-time">2026年5月10日</p>
+          </div>
+        </div>
+        <p class="post-text">? ? ?</p>
+        <div class="post-photos">
+          <div class="photo-item">
+            <div class="photo-ph">
+              <span class="future-memory-text">&emsp;&emsp;&emsp;&emsp;&emsp;Reserved for Today<br> &emsp;&emsp;&emsp;&emsp;&emsp;驚喜待上傳</span>
+            </div>
+          </div>
+        </div>
+        <div class="post-actions">
+          <button class="like-btn" onclick="toggleLike(this)">
+            <span class="like-heart">♡</span>
+            <span class="like-count">1 likes</span>
+          </button>
+          <button class="comment-btn" onclick="toggleComments(this)">留言</button>
+        </div>
+        <div class="comments">
+          <div class="comments-inner">
+            <div class="comments-list">
+              <div class="comment">
+                <div class="post-avatar">
+            <img src="assets/me-avatar.jpg" alt=""
+                 onerror="this.style.display='none';this.parentElement.textContent='？'">
+          </div>
+                <div class="comment-body">
+                  <p class="comment-name">林以喬</p>
+                  <p class="comment-text">呼嚕呼嚕呼嚕嚕</p>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 結尾 -->
+      <div class="ending">
+        <div class="ending-line"></div>
+        <p class="ending-text">Happy Mother's Day</p>
+        <p class="ending-sub">2026</p>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function toggleLike(btn) {
+      const isLiked = btn.classList.contains('liked');
+      const countEl = btn.querySelector('.like-count');
+      const heartEl = btn.querySelector('.like-heart');
+      const current = parseInt(countEl.textContent);
+      btn.classList.toggle('liked');
+      heartEl.textContent = isLiked ? '♡' : '♥';
+      countEl.textContent = (isLiked ? current - 1 : current + 1) + ' likes';
+      if (!isLiked) {
+        heartEl.style.animation = 'none';
+        heartEl.offsetHeight;
+        heartEl.style.animation = '';
+      }
+    }
+
+    function toggleComments(btn) {
+      const post     = btn.closest('.post');
+      const comments = post.querySelector('.comments');
+      const isOpen   = comments.classList.contains('open');
+      comments.classList.toggle('open');
+      btn.textContent = isOpen ? '留言' : '收起';
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.post, .future-section, .ending').forEach(el => {
+      observer.observe(el);
+    });
+  </script>
+
+  <script type="module">
+    import { initAuth } from './auth.js';
+    initAuth({ password: '19790529', pageKey: 'mom', hint: '那個超棒的人出現的日子' });
+  </script>
+</body>
+</html>
